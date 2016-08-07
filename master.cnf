@@ -1,0 +1,7 @@
+[mysqld]
+server-id=1
+log-bin=mysql-bin
+relay-log=mysql-relay
+bind-address=0.0.0.0
+skip-name-resolve
+# expire-log-days=7 this makes container fail

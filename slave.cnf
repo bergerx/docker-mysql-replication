@@ -1,0 +1,10 @@
+[mysqld]
+server-id=2
+log-bin=mysql-bin
+relay-log=mysql-relay-bin
+bind-address=0.0.0.0
+skip-name-resolve
+log-slave-updates
+master-info-repository=TABLE
+relay-log-info-repository=TABLE
+relay-log-recovery=1
