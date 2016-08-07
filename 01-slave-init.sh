@@ -2,6 +2,11 @@
 # TODO: master-data needs RELOAD privilege
 # TODO: replace with replica user (read-only)
 # TODO: blacklist? information_schema performance_schema
+# TODO: cover slave side selection for replication entities:
+# * replicate-do-db=db_name only if we want to store and replicate certain DBs
+# * replicate-ignore-db=db_name used when we don't want to replicate certain DBs
+# * replicate_wild_do_table used to replicate tables based on wildcard patterns
+# * replicate_wild_ignore_table used to ignore tables in replication based on wildcard patterns 
 
 # Expects these variables to be set
 MASTER_USER=${MASTER_USER:-replication}
@@ -70,8 +75,3 @@ while ! check_slave_health; do
   sleep 1
 done
 
-# TODO:
-# replicate-do-db=db_name only if we want to store and replicate certain DBs
-# replicate-ignore-db=db_name used when we don't want to replicate certain DBs
-# replicate_wild_do_table used to replicate tables based on wildcard patterns
-# replicate_wild_ignore_table used to ignore tables in replication based on wildcard patterns 
