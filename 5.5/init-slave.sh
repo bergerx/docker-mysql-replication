@@ -1,20 +1,12 @@
 #!/bin/bash
-# TODO: master-data needs RELOAD privilege
-# TODO: replace with replica user (read-only)
-# TODO: blacklist? information_schema performance_schema
 # TODO: cover slave side selection for replication entities:
 # * replicate-do-db=db_name only if we want to store and replicate certain DBs
 # * replicate-ignore-db=db_name used when we don't want to replicate certain DBs
 # * replicate_wild_do_table used to replicate tables based on wildcard patterns
 # * replicate_wild_ignore_table used to ignore tables in replication based on wildcard patterns 
 
-# Expects these variables to be set
-MASTER_USER=${MASTER_USER:-replication}
-MASTER_PASSWORD=${MASTER_PASSWORD:-replication_pass}
-MASTER_PORT=${MASTER_PORT:-3306}
-MASTER_HOST=${MASTER_HOST:-master}
-HEALTH_GRACE_PERIOD=${HEALTH_GRACE_PERIOD:-3}
-HEALTH_TIMEOUT=${HEALTH_TIMEOUT:-10}
+REPLICATION_HEALTH_GRACE_PERIOD=${REPLICATION_HEALTH_GRACE_PERIOD:-3}
+REPLICATION_HEALTH_TIMEOUT=${REPLICATION_HEALTH_TIMEOUT:-10}
 
 check_slave_health () {
   echo Checking replication health:
@@ -36,13 +28,13 @@ mysql -u root -e "RESET MASTER; \
   CHANGE MASTER TO \
   MASTER_HOST='$MASTER_HOST', \
   MASTER_PORT=$MASTER_PORT, \
-  MASTER_USER='$MASTER_USER', \
-  MASTER_PASSWORD='$MASTER_PASSWORD';"
+  MASTER_USER='$REPLICATION_USER', \
+  MASTER_PASSWORD='$REPLICATION_PASSWORD';"
 
 mysqldump \
   --protocol=tcp \
-  --user=$MASTER_USER \
-  --password=$MASTER_PASSWORD \
+  --user=$REPLICATION_USER \
+  --password=$REPLICATION_PASSWORD \
   --host=$MASTER_HOST \
   --port=$MASTER_PORT \
   --hex-blob \
@@ -62,11 +54,11 @@ echo Initial health check:
 check_slave_health
 
 echo Waiting for health grace period and slave to be still healthy:
-sleep $HEALTH_GRACE_PERIOD
+sleep $REPLICATION_HEALTH_GRACE_PERIOD
 
 counter=0
 while ! check_slave_health; do
-  if (( counter >= $HEALTH_TIMEOUT )); then
+  if (( counter >= $REPLICATION_HEALTH_TIMEOUT )); then
     echo ERROR: Replication not healthy, health timeout reached, failing.
 	break
     exit 1
