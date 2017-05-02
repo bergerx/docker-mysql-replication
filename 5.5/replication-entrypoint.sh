@@ -43,8 +43,6 @@ else
   cat > /etc/mysql/conf.d/repl-slave.cnf << EOF
 [mysqld]
 log-slave-updates
-master-info-repository=TABLE
-relay-log-info-repository=TABLE
 relay-log-recovery=1
 EOF
 fi

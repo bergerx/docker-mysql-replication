@@ -31,6 +31,8 @@ mysql -u root -e "RESET MASTER; \
   MASTER_USER='$REPLICATION_USER', \
   MASTER_PASSWORD='$REPLICATION_PASSWORD';"
 
+sleep 5
+
 mysqldump \
   --protocol=tcp \
   --user=$REPLICATION_USER \
