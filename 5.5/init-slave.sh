@@ -7,6 +7,8 @@
 
 REPLICATION_HEALTH_GRACE_PERIOD=${REPLICATION_HEALTH_GRACE_PERIOD:-3}
 REPLICATION_HEALTH_TIMEOUT=${REPLICATION_HEALTH_TIMEOUT:-10}
+MYSQLDUMP_HOST=${MYSQLDUMP_HOST:$MASTER_HOST}
+MYSQLDUMP_PORT=${MYSQLDUMP_PORT:$MASTER_PORT}
 
 check_slave_health () {
   echo Checking replication health:
@@ -37,8 +39,8 @@ mysqldump \
   --protocol=tcp \
   --user=$REPLICATION_USER \
   --password=$REPLICATION_PASSWORD \
-  --host=$MASTER_HOST \
-  --port=$MASTER_PORT \
+  --host=$MYSQLDUMP_HOST \
+  --port=$MYSQLDUMP_PORT \
   --hex-blob \
   --all-databases \
   --add-drop-database \
