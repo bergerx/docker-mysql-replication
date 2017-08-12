@@ -13,6 +13,8 @@ Additional environment variables:
 * REPLICATION_HEALTH_TIMEOUT [default: 10]
 * MASTER_PORT [default: 3306]
 * MASTER_HOST [default: master]
+* MYSQLDUMP_PORT [default: $MASTER_PORT]
+* MYSQLDUMP_HOST [default: $MASTER_HOST]
 
 # Start master
 
