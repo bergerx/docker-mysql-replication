@@ -24,7 +24,7 @@ check_slave_health () {
 }
 
 
-echo Updating master connetion info in slave.
+echo Updating master connection info in slave.
 
 mysql -u root -e "RESET MASTER; \
   CHANGE MASTER TO \
@@ -32,6 +32,8 @@ mysql -u root -e "RESET MASTER; \
   MASTER_PORT=$MASTER_PORT, \
   MASTER_USER='$REPLICATION_USER', \
   MASTER_PASSWORD='$REPLICATION_PASSWORD';"
+
+echo Dumping data from master node
 
 mysqldump \
   --protocol=tcp \
