@@ -3,7 +3,7 @@
 # * replicate-do-db=db_name only if we want to store and replicate certain DBs
 # * replicate-ignore-db=db_name used when we don't want to replicate certain DBs
 # * replicate_wild_do_table used to replicate tables based on wildcard patterns
-# * replicate_wild_ignore_table used to ignore tables in replication based on wildcard patterns 
+# * replicate_wild_ignore_table used to ignore tables in replication based on wildcard patterns
 
 REPLICATION_HEALTH_GRACE_PERIOD=${REPLICATION_HEALTH_GRACE_PERIOD:-3}
 REPLICATION_HEALTH_TIMEOUT=${REPLICATION_HEALTH_TIMEOUT:-10}

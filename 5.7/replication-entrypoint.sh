@@ -13,6 +13,7 @@ EOF
 if [ -n "$MASTER_PORT_3306_TCP_ADDR" ]; then
   export MASTER_HOST=$MASTER_PORT_3306_TCP_ADDR
   export MASTER_PORT=$MASTER_PORT_3306_TCP_PORT
+  export MASTER_ROOT_PASSWORD=$MASTER_PORT_3306_TCP_ROOT_PASSWORD
 fi
 
 if [ -z "$MASTER_HOST" ]; then
@@ -21,7 +22,7 @@ if [ -z "$MASTER_HOST" ]; then
 #!/bin/bash
 
 echo Creating replication user ...
-mysql -u root -e "\
+mysql -u root -p$MASTER_ROOT_PASSWORD -e "\
   GRANT \
     FILE, \
     SELECT, \
