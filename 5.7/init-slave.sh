@@ -12,7 +12,7 @@ MYSQLDUMP_PORT=${MYSQLDUMP_PORT:-$MASTER_PORT}
 
 check_slave_health () {
   echo Checking replication health:
-  status=$(mysql -u root -e "SHOW SLAVE STATUS\G")
+  status=$(${mysql[@]} -e "SHOW SLAVE STATUS\G")
   echo "$status" | egrep 'Slave_(IO|SQL)_Running:|Seconds_Behind_Master:|Last_.*_Error:' | grep -v "Error: $"
   if ! echo "$status" | grep -qs "Slave_IO_Running: Yes"    ||
      ! echo "$status" | grep -qs "Slave_SQL_Running: Yes"   ||
@@ -23,10 +23,17 @@ check_slave_health () {
   return 0
 }
 
+mysql=( mysql -uroot )
+
+if [ ! -z "$MYSQL_ROOT_PASSWORD" ]; then
+  mysql+=( -p"${MYSQL_ROOT_PASSWORD}" )
+fi
+
+echo ${mysql[@]}
 
 echo Updating master connection info in slave.
 
-mysql -u root -e "RESET MASTER; \
+${mysql[@]} -e "RESET MASTER; \
   CHANGE MASTER TO \
   MASTER_HOST='$MASTER_HOST', \
   MASTER_PORT=$MASTER_PORT, \
@@ -47,12 +54,12 @@ mysqldump \
   --master-data \
   --flush-logs \
   --flush-privileges \
-  | mysql -u root
+  | ${mysql[@]}
 
 echo mysqldump completed.
 
 echo Starting slave ...
-mysql -u root -e "START SLAVE;"
+${mysql[@]} -e "START SLAVE;"
 
 echo Initial health check:
 check_slave_health
@@ -62,6 +69,7 @@ sleep $REPLICATION_HEALTH_GRACE_PERIOD
 
 counter=0
 while ! check_slave_health; do
+  echo "Waiting before checking replication health (iteration: $counter)"
   if (( counter >= $REPLICATION_HEALTH_TIMEOUT )); then
     echo ERROR: Replication not healthy, health timeout reached, failing.
 	break
