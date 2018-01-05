@@ -16,13 +16,19 @@ if [ -n "$MASTER_PORT_3306_TCP_ADDR" ]; then
   export MASTER_ROOT_PASSWORD=$MASTER_PORT_3306_TCP_ROOT_PASSWORD
 fi
 
+mysql=( mysql -uroot )
+
+if [ ! -z "$MYSQL_ROOT_PASSWORD" ]; then
+  mysql+=( -p"${MYSQL_ROOT_PASSWORD}" )
+fi
+
 if [ -z "$MASTER_HOST" ]; then
   export SERVER_ID=1
   cat >/docker-entrypoint-initdb.d/init-master.sh  <<'EOF'
 #!/bin/bash
 
 echo Creating replication user ...
-mysql -u root -p$MASTER_ROOT_PASSWORD -e "\
+${mysql[@]} -e "\
   GRANT \
     FILE, \
     SELECT, \
