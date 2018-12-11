@@ -1,3 +1,9 @@
+```
+NOTE: THIS PROJECT WAS DEVELOPED AS A RPOOF OF CONCEPT PROJECT THAT HAS NEVER BEEN USED
+
+PLEASE CHECK THE CODE AND USE IT ON YOUR OWN RISK
+```
+
 Docker images to support implicit mysql replication support.
 
 Features:
